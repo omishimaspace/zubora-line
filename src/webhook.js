@@ -127,11 +127,6 @@ exports.handler = (event, context, callback) => {
       } else if (answer) {
         console.log(lineEvent.replyToken);
         console.log(answer);
-        // await setState({
-        //   userId: lineEvent.source.userId,
-        //   timestamp: lineEvent.timestamp,
-        //   scenario: question.scenario,
-        // });
         await lineClient.replyMessage(lineEvent.replyToken, {
           'type': 'text',
           'text': answer,
