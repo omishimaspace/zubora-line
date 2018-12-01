@@ -72,6 +72,7 @@ functions:
     timeout: 30
     role: ${self:custom.config.LAMBDA_BASIC_ROLE} 
     environment: 
+      CHANNEL_ACCES_TOKEN: ${self:custom.config.CHANNEL_ACCES_TOKEN}
     tags:
       project: 'zuborash webhook'
       service: ${self:service}

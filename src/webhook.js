@@ -1,58 +1,55 @@
 'use strict';
 
 const aws = require('aws-sdk');
+const line = require('@line/bot-sdk');
+const lineClient = new line.Client({channelAccessToken: process.env.CHANNEL_ACCES_TOKEN});
 const docClient = new aws.DynamoDB.DocumentClient({region: 'ap-northeast-1'});
 
 const REQUEST_BY_MATERIAL = '食材で選ぶ';
 const REQUEST_BY_CATEGORY = '料理のジャンルから選ぶ';
 const REQUEST_BY_WORK_TIME = '料理時間で選びます';
 
-const QUESTION_ABOUT_MATERIAL = '使う食材を教えてください';
-const QUESTION_ABOUT_CATEGORY = '今日の気分に合うジャンルを選んでください';
-const QUESTION_ABOUT_WORK_TIME = '調理時間を選んでください';
+const questionForMaterial = {
+  'type': 'text',
+  'text': '使う食材を教えてください',
+};
+
+const questionForCategory = {
+  'type': 'text',
+  'text': '今日の気分に合うジャンルを選んでください',
+};
+
+const questionForWorkTime = {
+  'type': 'text',
+  'text': '調理時間を選んでください',
+};
 
 // AWS Lambda から呼び出される処理
 exports.handler = (event, context, callback) => {
   console.log(event);
-
-  // Redirect
-  let response = {
-    "statusCode": 200,
-    "headers": {
-       "Content-Type": "application/json",
-       'Access-Control-Allow-Origin': '*',
-       'Access-Control-Allow-Credentials': 'true',
-    },
-    "body": JSON.stringify({
-      result: 'success'
-    })
-  };
-
   const body = JSON.parse(event.body);
 
-  body.events.map((lineEvent) => {
-      let item = {
-        userId: lineEvent.source.userId,
-        timestamp: lineEvent.timestamp,
-        replyToken: lineEvent.replyToken,
-        material: 'M',
-        category: 'C',
-        workTime: 'T',
-      };
-    
-      var params = {
-        TableName: 'line-context',
-        Item: item
-      };
-    
-      docClient.put(params, (err, data) => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log(data);
-        }
-      });
-    });
+  // Response
+  let response = { statusCode: 200 };
+
+  body.events.some(async (lineEvent) => {
+    let message = null;
+    if (lineEvent.type === 'message' && lineEvent.message && lineEvent.message.type === 'text') {
+      if (lineEvent.message.text === REQUEST_BY_MATERIAL) {
+        message = questionForMaterial;
+      } else if (lineEvent.message.text === REQUEST_BY_CATEGORY) {
+        message = questionForCategory;
+      } else if (lineEvent.message.text === REQUEST_BY_WORK_TIME) {
+        message = questionForWorkTime;
+      }
+      if (message) {
+        console.log(lineEvent.replyToken);
+        console.log(message);
+        await lineClient.replyMessage(lineEvent.replyToken, message);
+        return true;
+      }
+    }
+  });
 
   callback(null, response);
 };
