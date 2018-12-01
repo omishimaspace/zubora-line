@@ -7,7 +7,7 @@ const docClient = new aws.DynamoDB.DocumentClient({region: 'ap-northeast-1'});
 
 const REQUEST_BY_MATERIAL = '食材で選ぶ';
 const REQUEST_BY_CATEGORY = '料理のジャンルから選ぶ';
-const REQUEST_BY_WORK_TIME = '料理時間で選びます';
+const REQUEST_BY_WORK_TIME = '料理時間で選ぶ';
 
 const questionForMaterial = {
   'type': 'text',
