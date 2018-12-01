@@ -102,11 +102,11 @@ exports.handler = (event, context, callback) => {
           console.log('Current state is: ' + state);
           if (state.Item.scenario) {
             if (state.Item.scenario === SCENARIO_ID_FOOD) {
-              answer = '探してます';
+              answer = '探しています';
             } else {
               let number = lineEvent.message.text * 1;
               if (number > 0) {
-                answer = '探してます';
+                answer = '探しています';
               } else {
                 answer = '数字で入力してください';
               }
