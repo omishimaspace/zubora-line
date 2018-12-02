@@ -2,3 +2,9 @@
 ```
 npm install -g serverless
 ```
+
+# deploy 方法
+```
+sls deploy --stage dev
+```
+など
