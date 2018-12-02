@@ -150,9 +150,9 @@ const getAnswer = (result) => {
         type: 'confirm',
         actions: [
           {
-            type: 'message',
+            type: 'uri',
             label: 'はい',
-            text: 'はい'
+            uri: recipe.url
           },
           {
             type: 'message',
@@ -160,7 +160,7 @@ const getAnswer = (result) => {
             text: 'いいえ'
           }
         ],
-        text: recipe.name + '\nが見つかりました！\n\nこのズボラ飯を作りますか？'
+        text: recipe.name + '\nが見つかりました！\n\nズボラスコアは【 ' + recipe.score + ' 】です。\n\nこのズボラ飯を作りますか？'
       }
     },
   ]
