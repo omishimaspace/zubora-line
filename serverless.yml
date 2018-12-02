@@ -62,7 +62,7 @@ package:
     - '**/*'
 
 functions:
-  #Receive Contacts Function 
+  #Receive webhook from LINE 
   webhook:
     handler: src/webhook.handler
     name: zuborash-webhook-${self:provider.stage}
@@ -74,9 +74,9 @@ functions:
     environment: 
       CHANNEL_ACCES_TOKEN: ${self:custom.config.CHANNEL_ACCES_TOKEN}
     tags:
-      project: 'zuborash webhook'
+      project: 'zubora-line'
       service: ${self:service}
-      part: authentication
+      part: webhook
       runtime: node.js 
     package:
       include:
@@ -87,3 +87,25 @@ functions:
           path: webhook
           method: post
           cors: true
+
+  #Add main menu
+  main_menu:
+    handler: src/mainMenu.handler
+    name: zuborash-main_menu-${self:provider.stage}
+    description: Add main menu to LINE
+    runtime: nodejs8.10
+    memorySize: 256
+    timeout: 30
+    role: ${self:custom.config.LAMBDA_BASIC_ROLE} 
+    environment: 
+      CHANNEL_ACCES_TOKEN: ${self:custom.config.CHANNEL_ACCES_TOKEN}
+    tags:
+      project: 'zubora-line'
+      service: ${self:service}
+      part: define
+      runtime: node.js 
+    package:
+      include:
+          - src/mainMenu.js
+          - designs/line_menu.png
+          - lib/**
